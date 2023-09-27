@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-const ExpenseForm = ({ expenseData, setExpenseData }) => {
+const ExpenseForm = ({ onAddExpense }) => {
   const [date, setDate] = useState("");
   const [amount, setAmount] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(""); 
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [description, setDescription] = useState("");
   const [formValid, setFormValid] = useState(true);
 
@@ -11,7 +11,6 @@ const ExpenseForm = ({ expenseData, setExpenseData }) => {
     e.preventDefault();
 
     if (!date || !amount || !selectedCategory || !description) {
-      // If any field is empty, set formValid to false and prevent submission
       setFormValid(false);
       return;
     }
@@ -20,14 +19,12 @@ const ExpenseForm = ({ expenseData, setExpenseData }) => {
       id: Math.random(),
       date,
       amount,
-      selectedCategory, // Corrected variable name
+      selectedCategory,
       description,
     };
 
-    // Use the spread operator to update the expenseData array
-    setExpenseData([...expenseData, expense]);
+    onAddExpense(expense);
 
-    // Clear the form fields and reset formValid after submitting
     setDate("");
     setAmount("");
     setSelectedCategory("");
@@ -36,29 +33,42 @@ const ExpenseForm = ({ expenseData, setExpenseData }) => {
   };
 
   return (
-    <React.Fragment>
-      <div>
-        {!formValid && <p className="error-message">Please fill out all fields.</p>}
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="date">Date of Purchase:</label>
+    <div className="container mt-5">
+      <h2 className="text-center mb-4">Expense Tracker</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="date" className="form-label">
+            Date of Purchase:
+          </label>
           <input
             onChange={(e) => setDate(e.target.value)}
             value={date}
             type="date"
+            className="form-control"
             id="date"
           />
-          <label htmlFor="amount">Amount:</label>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="amount" className="form-label">
+            Amount:
+          </label>
           <input
             onChange={(e) => setAmount(e.target.value)}
             value={amount}
             type="number"
             min={1}
+            className="form-control"
             id="amount"
           />
-          <label htmlFor="category">Category:</label>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="category" className="form-label">
+            Category:
+          </label>
           <select
             onChange={(e) => setSelectedCategory(e.target.value)}
             value={selectedCategory}
+            className="form-control"
             id="category"
           >
             <option value="">Select a category</option>
@@ -69,18 +79,28 @@ const ExpenseForm = ({ expenseData, setExpenseData }) => {
             <option value="Travel">Travel</option>
             <option value="Other">Other</option>
           </select>
-          <label htmlFor="description">Description:</label>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="description" className="form-label">
+            Description:
+          </label>
           <input
             onChange={(e) => setDescription(e.target.value)}
             value={description}
             type="text"
-            placeholder="enter description.."
+            placeholder="Enter description..."
+            className="form-control"
             id="description"
           />
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-    </React.Fragment>
+        </div>
+        <button type="submit" className="btn btn-primary mt-3">
+          Submit
+        </button>
+        {!formValid && (
+          <p className="alert alert-danger mt-3">Please fill out all fields.</p>
+        )}
+      </form>
+    </div>
   );
 };
 
